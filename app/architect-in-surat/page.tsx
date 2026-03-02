@@ -1,6 +1,5 @@
 "use client"
 
-import type { Metadata } from "next"
 import { JsonLd } from "@/components/json-ld"
 import {
   generateMetadata as genMetadata,

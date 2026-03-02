@@ -3,8 +3,9 @@
 import { useRef } from 'react'
 import Image from 'next/image'
 import { PackageCheck, Rocket, ShieldCheck } from 'lucide-react'
-import { Reveal } from './reveal'
 import { BlurPanel } from './blur-panel'
+
+// Removed Reveal import - using pure CSS animations instead
 
 export function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -30,20 +31,25 @@ export function HeroSection() {
       {/* Content - CSS animations only */}
       <div className="relative z-10 h-full flex items-center justify-center animate-in fade-in duration-1000">
         <div className="container-custom text-center text-white">
-          <Reveal>
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-none tracking-tight mb-6">
-              Design furniture for
-              <br />
-              <span className="italic font-light">spaces that breathe.</span>
-            </h1>
-          </Reveal>
+          {/* h1 with built-in CSS animation - no Reveal wrapper */}
+          <h1 
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-none tracking-tight mb-6"
+            style={{
+              animation: 'reveal-in 0.6s cubic-bezier(0.21, 0.47, 0.32, 0.98) 100ms both',
+            }}
+          >
+            Design furniture for
+            <br />
+            <span className="italic font-light">spaces that breathe.</span>
+          </h1>
 
-          <Reveal delay={0.2}>
-            <p className="text-lg md:text-xl text-white/90 mb-12 leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-800 fill-mode-both"
-               style={{ animationDelay: '700ms' }}>
-              Designed in Belgium, crafted to endure — timeless pieces for modern living.
-            </p>
-          </Reveal>
+          {/* Paragraph with animation delay */}
+          <p 
+            className="text-lg md:text-xl text-white/90 mb-12 leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-800 fill-mode-both"
+            style={{ animationDelay: '700ms' }}
+          >
+            Designed in Belgium, crafted to endure — timeless pieces for modern living.
+          </p>
         </div>
       </div>
 
@@ -67,6 +73,20 @@ export function HeroSection() {
           </div>
         </BlurPanel>
       </div>
+
+      {/* Define reveal-in keyframe for this component */}
+      <style jsx>{`
+        @keyframes reveal-in {
+          from {
+            opacity: 0;
+            transform: translateY(4px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </section>
   )
 }

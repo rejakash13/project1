@@ -29,8 +29,7 @@ const nextConfig = {
   productionBrowserSourceMaps: false,
   reactStrictMode: false,
   experimental: {
-    optimizePackageImports: ['lucide-react', 'framer-motion', '@radix-ui/react-dropdown-menu'],
-    optimizeCss: true,
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-dropdown-menu', '@radix-ui/react-avatar', '@radix-ui/react-select', 'recharts'],
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -41,7 +40,7 @@ const nextConfig = {
           maxAsyncRequests: 30,
           maxInitialRequests: 30,
           minSize: 20000,
-          maxSize: 244000,
+          maxSize: 100000,
           cacheGroups: {
             framer: {
               test: /[\\/]node_modules[\\/](framer-motion)[\\/]/,
@@ -69,6 +68,13 @@ const nextConfig = {
               name: 'react-vendor',
               priority: 22,
               reuseExistingChunk: true,
+            },
+            recharts: {
+              test: /[\\/]node_modules[\\/](recharts)[\\/]/,
+              name: 'recharts',
+              priority: 20,
+              reuseExistingChunk: true,
+              enforce: true,
             },
             vendor: {
               test: /[\\/]node_modules[\\/]/,

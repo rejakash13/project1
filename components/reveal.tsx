@@ -1,6 +1,5 @@
 "use client"
 
-import { motion } from "framer-motion"
 import type { ReactNode } from "react"
 
 interface RevealProps {
@@ -9,20 +8,38 @@ interface RevealProps {
   className?: string
 }
 
+/**
+ * CRITICAL: Lightweight reveal using CSS animations instead of Framer Motion
+ * This component is on the critical path for homepage performance (LCP, TBT)
+ * Avoids importing framer-motion in initial render
+ */
 export function Reveal({ children, delay = 0, className }: RevealProps) {
+  const delayMs = (delay * 1000) + 100 // Add baseline 100ms
+  const keyframes = `
+    @keyframes reveal-in {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  `
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 4 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{
-        duration: 0.6,
-        delay,
-        ease: [0.21, 0.47, 0.32, 0.98],
-      }}
-      className={className}
-    >
-      {children}
-    </motion.div>
+    <>
+      <style>{keyframes}</style>
+      <div
+        className={className}
+        style={{
+          animation: `reveal-in 0.6s cubic-bezier(0.21, 0.47, 0.32, 0.98) ${delayMs}ms both`,
+          opacity: 1,
+        }}
+      >
+        {children}
+      </div>
+    </>
   )
 }
