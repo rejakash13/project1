@@ -31,7 +31,6 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-dropdown-menu', '@radix-ui/react-avatar', '@radix-ui/react-select', 'recharts'],
     optimizeCss: true,
-    scrollRestoration: true,
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -94,7 +93,47 @@ const nextConfig = {
     }
     return config
   },
-
+  headers: async () => [
+    {
+      source: '/:path*',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'public, max-age=3600, stale-while-revalidate=86400'
+        },
+        {
+          key: 'X-Content-Type-Options',
+          value: 'nosniff'
+        },
+        {
+          key: 'Referrer-Policy',
+          value: 'strict-origin-when-cross-origin'
+        }
+      ]
+    },
+    {
+      source: '/images/:path*',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'public, max-age=31536000, immutable'
+        },
+        {
+          key: 'X-Content-Type-Options',
+          value: 'nosniff'
+        }
+      ]
+    },
+    {
+      source: '/_next/static/:path*',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'public, max-age=31536000, immutable'
+        }
+      ]
+    }
+  ],
   onDemandEntries: {
     maxInactiveAge: 120 * 1000,
     pagesBufferLength: 5,
