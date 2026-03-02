@@ -1,6 +1,13 @@
+import { type Viewport } from "next"
 import { Header } from "@/components/header"
 import { JoinUsSection } from "@/components/join-us-section"
 import { Footer } from "@/components/footer"
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+}
 
 export const revalidate = 3600
 
