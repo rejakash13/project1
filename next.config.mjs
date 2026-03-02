@@ -30,7 +30,6 @@ const nextConfig = {
   reactStrictMode: false,
   experimental: {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-dropdown-menu', '@radix-ui/react-avatar', '@radix-ui/react-select', 'recharts'],
-    optimizeCss: true,
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
