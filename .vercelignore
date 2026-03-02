@@ -1,6 +1,5 @@
 .git
 .gitignore
-.next
 .turbo
 node_modules
 npm-debug.log*
