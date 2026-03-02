@@ -11,6 +11,7 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
+  preload: true,
 })
 
 export const metadata: Metadata = {
@@ -257,9 +258,11 @@ export default function RootLayout({
         <meta name="theme-color" content="#000000" />
         <meta name="mobile-web-app-capable" content="yes" />
 
-        {/* Preconnect to external domains */}
+        {/* Preconnect & DNS prefetch */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
       </head>
       <body className="font-sans bg-neutral-50 text-neutral-900 overflow-x-hidden">
         <script
@@ -282,14 +285,14 @@ export default function RootLayout({
         {children}
         <FloatingActionButton />
 
-        {/* Google Analytics - Lazy load */}
+        {/* Google Analytics - Deferred */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-TBCDEF9XYZ"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
         <Script
           id="google-analytics"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
@@ -302,10 +305,10 @@ export default function RootLayout({
           }}
         />
 
-        {/* Google Tag Manager - Lazy load */}
+        {/* Google Tag Manager - Deferred */}
         <Script
           id="google-tag-manager"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -317,10 +320,10 @@ export default function RootLayout({
           }}
         />
 
-        {/* Vercel Analytics */}
+        {/* Vercel Analytics - Deferred */}
         <Script
           src="https://cdn.vercel-insights.com/v1/script.js"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
       </body>
     </html>

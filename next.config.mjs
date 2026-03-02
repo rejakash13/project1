@@ -22,14 +22,15 @@ const nextConfig = {
         hostname: "**.unsplash.com",
       },
     ],
-    minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year for immutable images
+    minimumCacheTTL: 60 * 60 * 24 * 365,
   },
   compress: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
-  reactStrictMode: false, // Disable strict mode in production to reduce re-renders
+  reactStrictMode: false,
   experimental: {
-    optimizePackageImports: ['lucide-react', 'framer-motion'],
+    optimizePackageImports: ['lucide-react', 'framer-motion', '@radix-ui/react-dropdown-menu'],
+    optimizeCss: true,
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -37,18 +38,36 @@ const nextConfig = {
         ...config.optimization,
         splitChunks: {
           chunks: 'all',
+          maxAsyncRequests: 30,
+          maxInitialRequests: 30,
+          minSize: 20000,
+          maxSize: 244000,
           cacheGroups: {
-            // Isolate heavy vendor libraries
             framer: {
               test: /[\\/]node_modules[\\/](framer-motion)[\\/]/,
               name: 'framer-motion',
-              priority: 20,
+              priority: 25,
               reuseExistingChunk: true,
+              enforce: true,
             },
             lucide: {
               test: /[\\/]node_modules[\\/](lucide-react)[\\/]/,
               name: 'lucide-react',
-              priority: 19,
+              priority: 24,
+              reuseExistingChunk: true,
+              enforce: true,
+            },
+            radix: {
+              test: /[\\/]node_modules[\\/](@radix-ui)[\\/]/,
+              name: 'radix-ui',
+              priority: 23,
+              reuseExistingChunk: true,
+              enforce: true,
+            },
+            react: {
+              test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+              name: 'react-vendor',
+              priority: 22,
               reuseExistingChunk: true,
             },
             vendor: {
@@ -56,8 +75,12 @@ const nextConfig = {
               name: 'vendor',
               priority: 10,
               reuseExistingChunk: true,
+              minSize: 0,
             },
           },
+        },
+        runtimeChunk: {
+          name: 'runtime',
         },
       }
     }
@@ -67,17 +90,47 @@ const nextConfig = {
     {
       source: '/:path*',
       headers: [
-        { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }
+        {
+          key: 'Cache-Control',
+          value: 'public, max-age=3600, stale-while-revalidate=86400'
+        },
+        {
+          key: 'X-Content-Type-Options',
+          value: 'nosniff'
+        },
+        {
+          key: 'Referrer-Policy',
+          value: 'strict-origin-when-cross-origin'
+        }
       ]
     },
     {
       source: '/images/:path*',
       headers: [
-        { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        { key: 'X-Content-Type-Options', value: 'nosniff' }
+        {
+          key: 'Cache-Control',
+          value: 'public, max-age=31536000, immutable'
+        },
+        {
+          key: 'X-Content-Type-Options',
+          value: 'nosniff'
+        }
+      ]
+    },
+    {
+      source: '/_next/static/:path*',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'public, max-age=31536000, immutable'
+        }
       ]
     }
   ],
+  onDemandEntries: {
+    maxInactiveAge: 120 * 1000,
+    pagesBufferLength: 5,
+  },
 }
 
 export default nextConfig
