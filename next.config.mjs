@@ -31,6 +31,7 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-dropdown-menu', '@radix-ui/react-avatar', '@radix-ui/react-select', 'recharts'],
     optimizeCss: true,
+    scrollRestoration: true,
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -108,6 +109,10 @@ const nextConfig = {
         {
           key: 'Referrer-Policy',
           value: 'strict-origin-when-cross-origin'
+        },
+        {
+          key: 'Permissions-Policy',
+          value: 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()'
         }
       ]
     },
@@ -126,6 +131,24 @@ const nextConfig = {
     },
     {
       source: '/_next/static/:path*',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'public, max-age=31536000, immutable'
+        }
+      ]
+    },
+    {
+      source: '/:path*.css',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'public, max-age=31536000, immutable'
+        }
+      ]
+    },
+    {
+      source: '/:path*.js',
       headers: [
         {
           key: 'Cache-Control',
